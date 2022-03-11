@@ -23,6 +23,10 @@
    margin: 20px;
  }
 
+ .Info-text{
+   color: green;
+ }
+
 .App-header {
   background-color: lightgray;
   width: auto;

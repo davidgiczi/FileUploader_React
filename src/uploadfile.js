@@ -1,10 +1,20 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+const rest = require('rest');
 
 function FileUploadPage(){
 const[selectedFiles, setSelectedFiles] = useState();
 const[isFileSelected, setIsFileSelected] = useState(false);
 const[disabled, setDisabled] = useState(true);
+const[infoText, setInfoText] = useState("Válasszon a gépén dokumentumokat a küldéshez.");
+
+ useEffect(() => {
+  
+     fetch('http://188.6.167.174:5555/softmagic/foldernames', {method:'GET', mode: 'no-cors',})
+.then((response) => {response.json()})
+.then((text) => console.log(text))
+   
+}, []);
 
 const changeHandler = (event) => {
     if(event.target.files.length !== 0){
@@ -33,12 +43,12 @@ async function sendFiles(fileList){
         method: 'POST',
         body: fileList,
         cache: 'no-cache',
-        cors: 'no-cors'
+        mode: 'no-cors'
     })
     
     .then((response) => response.json())
     .then((text) => {alert(text);})
-    .catch(() => {alert("Fájl(ok) elküldve.");})
+    .catch((error) => {alert(error);})
     window.location.reload();
 }
 
@@ -49,15 +59,18 @@ return( <div className="File-list">
     </ul>       
         </div>) :
         <div>
-            Maximum feltölthető adat: 5MB
+            <GetInfoText info={infoText}/>
             </div>}
-    <input type='file' name='file' accept='.txt, .pdf, .doc, .xls, .xlsx'  onChange={changeHandler} multiple></input>
+    <input type='file' name='file' accept='.txt, .pdf, .doc, .xls, .xlsx, .jpg'  onChange={changeHandler} multiple></input>
     <div>
         <button onClick={handleSubmission} className='Send-btn' disabled = {disabled}>Küldés</button>
     </div>
     </div>);
 }
 
+function GetInfoText(props){
+    return(<p className='Info-text'>{props.info}</p>);
+}
 
 function FileList(props) {
     const store = [...props.list];
