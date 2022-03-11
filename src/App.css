@@ -5,7 +5,7 @@
 }
 
 .File-list {
-  height: 400px;
+  height: 600px;
   width: 600px;
   margin: auto;
   margin-top: 100px;
@@ -17,14 +17,20 @@
 }
 
 .File-data {
-  margin: 20px;
+  margin: 5px;
 }
  .Send-btn {
    margin: 20px;
+   padding: 5px;
+   margin: 20px;
+   border-radius: 5px;
  }
 
- .Info-text{
-   color: green;
+ .Selection-field{
+   text-align: center;
+   padding: 5px;
+   margin: 10px;
+   border-radius: 3px;
  }
 
 .App-header {
@@ -39,8 +45,11 @@
   color: white;
 }
 
-.Send-button {
-  display: flex;
-  justify-content: center;
-  margin: 30px;
+p{
+  color: green;
+}
+.Choose-file{
+  margin: 20px;
+  padding: 5px;
+  border-radius: 5px;
 }
