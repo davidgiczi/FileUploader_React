@@ -1,20 +1,26 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 const MAX_SIZE = 5 * 1024 * 1024;
+let foldername;
 
 function FileUploadPage(){
 const[selectedFiles, setSelectedFiles] = useState();
 const[isFileSelected, setIsFileSelected] = useState(false);
 const[disabled, setDisabled] = useState(true);
 const[infoText, setInfoText] = useState("Válasszon a dokumentumokat a küldéshez.");
+const[folderNames, setFolderNames] = useState([]);
 
- useEffect(() => {
-  
-     fetch('http://188.6.167.174:5555/softmagic/foldernames', {method:'GET', mode: 'no-cors',})
-.then((response) => {response.json()})
-.then((text) => console.log(text))
-   
-}, []);
+useEffect(() => {
+
+    fetch('http://localhost:2022/softmagic/foldernames', {method:'GET', cache: 'no-cache'})
+    .then((response) => response.json())
+    .then((folderNames) => setFolderNames(folderNames));
+
+  }, []);
+
+const chosenfoldername = (event) => {
+foldername = event.target.value;
+}
 
 const changeHandler = (event) => {
 
@@ -36,20 +42,21 @@ const handleSubmission = () => {
 for (const key of Object.keys(selectedFiles)) {
     formData.append('file', selectedFiles[key])
 }
+formData.append('foldername', foldername);
 sendFiles(formData);
 }
 
 return( <div className="File-list">
     <p>Válasszon mappát.</p>
     {isFileSelected ? (<div className='File-data'>
-    <ul><GetFolderNames/>
+    <ul>  <SelectionField names={folderNames} onChange={chosenfoldername}/>
     <FileList list={selectedFiles}/>
-    <GetInfoText info={infoText} color='green'/>
+    <InfoText info={infoText} color='green'/>
     </ul>       
         </div>) :
         <div>
-            <GetFolderNames/>
-            <GetInfoText info={infoText} color='green'/>
+            <SelectionField names={folderNames} onChange={chosenfoldername}/>
+            <InfoText info={infoText} color='green'/>
             </div>}
     <input className='Choose-file' type='file' name='file' accept='.txt, .pdf, .doc, .xls, .xlsx, .jpg'  onChange={changeHandler} multiple></input>
     <div>
@@ -58,7 +65,7 @@ return( <div className="File-list">
     </div>);
 }
 
-function GetInfoText(props){
+function InfoText(props){
     return(<p className='Info-text' style={{color: props.color}}>{props.info}</p>);
 }
 
@@ -69,15 +76,12 @@ function FileList(props) {
         </ul>); 
 }
 
-function GetFolderNames(props){
-    const[folderName, setFolderName] = useState("-");
-    const folders = ["könyvelés", "bérelszámolás", "pénzügy"];
+function SelectionField(props){
+
     return(<>
-        <select className='Selection-field'>
-        <option>{folderName}</option>
-        {folders.map((name) => <option>{name}</option>)} 
-        </select>
-    </>);
+        <select className='Selection-field' onChange={props.onChange}>
+        {props.names.map((name, index) => <option key={index}>{name}</option>)}
+        </select></>);
 }
 
 function getLeftOverFileSize(files){
@@ -89,15 +93,13 @@ function getLeftOverFileSize(files){
 
 async function sendFiles(fileList){
 
-    await fetch('http://188.6.167.174:5555/softmagic/upload',  {
-
+    await fetch('http://localhost:2022/softmagic/upload',  {
        method: 'POST',
        body: fileList,
-       cache: 'no-cache',
-       mode: 'no-cors'
+       cache: 'no-cache'
    })
    
-   .then((response) => response.json())
+   .then((response) => response.text())
    .then((text) => {alert(text);})
    .catch((error) => {alert(error);})
    window.location.reload();
