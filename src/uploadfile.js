@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 const MAX_SIZE = 5 * 1024 * 1024;
-let foldername;
+let foldername = "-";
 
 function FileUploadPage(){
 const[selectedFiles, setSelectedFiles] = useState();
@@ -24,6 +24,12 @@ foldername = event.target.value;
 
 const changeHandler = (event) => {
 
+    if(foldername === "-"){
+     alert("A fájlok kiválasztása előtt válasszon mappanevet.")
+     window.location.reload();
+     return;
+    }
+
     if(event.target.files.length !== 0){
     setSelectedFiles(event.target.files);
     setIsFileSelected(true);
@@ -34,7 +40,8 @@ const changeHandler = (event) => {
         setDisabled(true); 
         setSelectedFiles([]);
         setInfoText("Válasszon a dokumentumokat a küldéshez.");
-    }
+        window.location.reload();
+        }
 }
 
 const handleSubmission = () => {
@@ -49,16 +56,17 @@ sendFiles(formData);
 return( <div className="File-list">
     <p>Válasszon mappát.</p>
     {isFileSelected ? (<div className='File-data'>
-    <ul>  <SelectionField names={folderNames} onChange={chosenfoldername}/>
+    <ul>  <SelectionField selected={foldername} names={folderNames} onChange={chosenfoldername}/>
     <FileList list={selectedFiles}/>
-    <InfoText info={infoText} color='green'/>
+    <InfoText info={infoText} color='black'/>
     </ul>       
         </div>) :
         <div>
-            <SelectionField names={folderNames} onChange={chosenfoldername}/>
-            <InfoText info={infoText} color='green'/>
+            <SelectionField selected={foldername} names={folderNames} onChange={chosenfoldername}/>
+            <InfoText info={infoText} color='black'/>
             </div>}
-    <input className='Choose-file' type='file' name='file' accept='.txt, .pdf, .doc, .xls, .xlsx, .jpg'  onChange={changeHandler} multiple></input>
+    <input className='Choose-file' type='file' name='file' accept='.txt, .pdf, .doc, .xls, .xlsx, .jpg' 
+    onChange={changeHandler} multiple></input>
     <div>
         <button onClick={handleSubmission} className='Send-btn' disabled = {disabled}>Küldés</button>
     </div>
@@ -76,10 +84,10 @@ function FileList(props) {
         </ul>); 
 }
 
-function SelectionField(props){
-
+function SelectionField(props)  {
+    
     return(<>
-        <select className='Selection-field' onChange={props.onChange}>
+        <select className='Selection-field' onChange={props.onChange} defaultValue={props.selected}>
         {props.names.map((name, index) => <option key={index}>{name}</option>)}
         </select></>);
 }

@@ -29,7 +29,6 @@
  .Selection-field{
    text-align: center;
    padding: 5px;
-   margin: 10px;
    border-radius: 3px;
  }
 
@@ -46,7 +45,8 @@
 }
 
 p{
-  color: green;
+  color: black;
+  font-weight: bold;
 }
 .Choose-file{
   margin: 20px;
