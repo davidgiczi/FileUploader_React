@@ -20,27 +20,39 @@ useEffect(() => {
 
 const chosenfoldername = (event) => {
 foldername = event.target.value;
+if(leftFileSize(selectedFiles) < 0){
+setDisabled(true);
+}
+else if(foldername !== "-") {
+setDisabled(false);
+}
+else if(foldername === "-"){
+setDisabled(true);
+}
 }
 
 const changeHandler = (event) => {
 
-    if(foldername === "-"){
-     alert("A fájlok kiválasztása előtt válasszon mappanevet.")
-     window.location.reload();
-     return;
-    }
-
     if(event.target.files.length !== 0){
     setSelectedFiles(event.target.files);
     setIsFileSelected(true);
-    setDisabled(false);
-    setInfoText("Még feltölthető " + getLeftOverFileSize(event.target.files) + " byte.");
     } 
     else {
         setDisabled(true); 
         setSelectedFiles([]);
         setInfoText("Válasszon a dokumentumokat a küldéshez.");
         window.location.reload();
+        return;
+        }
+
+        if(foldername === "-"){
+            alert("A fájlok küldése előtt válasszon mappanevet.")
+           }
+        else{
+            setDisabled(false);
+        }
+        if(leftFileSize(selectedFiles) < 0){
+            setDisabled(true);
         }
 }
 
@@ -58,7 +70,7 @@ return( <div className="File-list">
     {isFileSelected ? (<div className='File-data'>
     <ul>  <SelectionField selected={foldername} names={folderNames} onChange={chosenfoldername}/>
     <FileList list={selectedFiles}/>
-    <InfoText info={infoText} color='black'/>
+    <UploadAbleFileInfo files={selectedFiles}/>
     </ul>       
         </div>) :
         <div>
@@ -92,11 +104,24 @@ function SelectionField(props)  {
         </select></>);
 }
 
-function getLeftOverFileSize(files){
+function leftFileSize(files){
     const store = [...files];
     let sum = 0;
     store.map((file) => sum += parseInt(file.size));
-    return MAX_SIZE - sum;
+    const deltaByte = MAX_SIZE - sum;
+    return deltaByte;
+}
+
+function UploadAbleFileInfo(props){
+    let infoText;
+    let deltaByte = leftFileSize(props.files);
+    if(deltaByte >= 0){
+        infoText = "Még feltölthető " + deltaByte + " byte.";
+    }
+    else{
+        infoText = "A dokumentumok nem küldhetők el, mivel egyszerre 5MB adat tölthető fel." ;
+    }
+    return (deltaByte >= 0 ?  <InfoText info={infoText} color='green'/> : <InfoText info={infoText} color='red'/>);
 }
 
 async function sendFiles(fileList){

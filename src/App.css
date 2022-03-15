@@ -6,7 +6,7 @@
 
 .File-list {
   height: 600px;
-  width: 600px;
+  width: 650px;
   margin: auto;
   margin-top: 100px;
   display: flex;
@@ -24,12 +24,14 @@
    padding: 5px;
    margin: 20px;
    border-radius: 5px;
+   cursor: pointer;
  }
 
  .Selection-field{
    text-align: center;
    padding: 5px;
    border-radius: 3px;
+   cursor: pointer;
  }
 
 .App-header {
