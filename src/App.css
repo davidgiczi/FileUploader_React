@@ -1,18 +1,30 @@
+* {
+  box-sizing: border-box;
+}
+
 .App {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 80px;
+  align-items: center;
+}
+
+li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+
 }
 
 .File-list {
   height: 600px;
-  width: 650px;
-  margin: auto;
-  margin-top: 100px;
+  width: 100%;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 3px solid lightgrey;
+  /* border: 2px solid rgba(0, 0, 0, 0.4); */
+  border-radius: 8px;
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12), 0 4px 4px 0 rgba(0, 0, 0, 0.12);
   text-align: center;
 }
 
@@ -35,11 +47,9 @@
  }
 
 .App-header {
-  background-color: lightgray;
   width: 100%;
+  background-color: lightgray;
   height: 50px;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);

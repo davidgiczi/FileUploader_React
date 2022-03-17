@@ -6,9 +6,7 @@ function App() {
     <div className="App">
       <header className="App-header">
       </header>
-      <div>
       <FileUploadPage/>
-      </div>
     </div>
   );
 }
