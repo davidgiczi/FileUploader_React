@@ -4,7 +4,7 @@ const MAX_SIZE = 5 * 1024 * 1024;
 let foldername = "-";
 
 function FileUploadPage(){
-const[selectedFiles, setSelectedFiles] = useState();
+const[selectedFiles, setSelectedFiles] = useState([]);
 const[isFileSelected, setIsFileSelected] = useState(false);
 const[disabled, setDisabled] = useState(true);
 const[infoText, setInfoText] = useState("Válasszon a dokumentumokat a küldéshez.");
@@ -18,23 +18,11 @@ useEffect(() => {
 
   }, []);
 
-const chosenfoldername = (event) => {
-foldername = event.target.value;
-if(leftFileSize(selectedFiles) < 0){
-setDisabled(true);
-}
-else if(foldername !== "-") {
-setDisabled(false);
-}
-else if(foldername === "-"){
-setDisabled(true);
-}
-}
-
 const changeHandler = (event) => {
 
     if(event.target.files.length !== 0){
-    setSelectedFiles(event.target.files);
+    const store = [...event.target.files];
+    setSelectedFiles(store);
     setIsFileSelected(true);
     } 
     else {
@@ -45,15 +33,22 @@ const changeHandler = (event) => {
         return;
         }
 
-        if(foldername === "-"){
-            alert("A fájlok küldése előtt válasszon mappanevet.")
+     if(foldername === "-") {
+        alert("A fájlok küldése előtt válasszon mappanevet.")
            }
-        else{
-            setDisabled(false);
+    else {
+        setDisabled(false);
         }
-        if(leftFileSize(selectedFiles) < 0){
-            setDisabled(true);
-        }
+}
+
+const chosenfoldername = (event) => {
+       foldername = event.target.value;
+    if(foldername !== "-" && isFileSelected){
+    setDisabled(false);
+    }
+    else {
+    setDisabled(true);
+    }
 }
 
 const handleSubmission = () => {
@@ -105,7 +100,7 @@ function SelectionField(props)  {
 }
 
 function leftFileSize(files){
-    const store = [...files];
+    const store = [...files]
     let sum = 0;
     store.map((file) => sum += parseInt(file.size));
     const deltaByte = MAX_SIZE - sum;
