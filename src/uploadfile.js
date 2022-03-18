@@ -12,7 +12,7 @@ const[folderNames, setFolderNames] = useState([]);
 
 useEffect(() => {
 
-    fetch('http://188.6.167.174:5555/softmagic/foldernames', {method:'GET', cache: 'no-cache'})
+    fetch('http://192.168.1.69:2022/softmagic/foldernames', {method:'GET', cache: 'no-cache'})
     .then((response) => response.json())
     .then((folderNames) => setFolderNames(folderNames));
 
@@ -121,7 +121,7 @@ function UploadAbleFileInfo(props){
 
 async function sendFiles(fileList){
 
-    await fetch('http://188.6.167.174:5555/softmagic/upload',  {
+    await fetch('http://192.168.1.69:2022/softmagic/upload',  {
        method: 'POST',
        body: fileList,
        cache: 'no-cache'
