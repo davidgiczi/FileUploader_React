@@ -12,11 +12,26 @@ const[folderNames, setFolderNames] = useState([]);
 
 useEffect(() => {
 
-    fetch('http://192.168.1.69:2022/softmagic/foldernames', {method:'GET', cache: 'no-cache'})
-    .then((response) => response.json())
-    .then((folderNames) => setFolderNames(folderNames));
+    let inputData =  prompt('Adja meg a jelszót:');
+    if(inputData !== null){
+        
+    const formData = new FormData();
+   formData.append('identifier', inputData);
+   fetch('http://localhost:2022/softmagic/getPermission', {method:'POST', cache: 'no-cache', body: formData})
+     .then((response) => response.text())
+     .then((permission) => isValid(permission));
 
+    }
   }, []);
+
+  const isValid = (permission) => {
+    permission === 'true' ? alert("Használat engedélyezve.") : alert("Helytelen jelszó!");  
+    if(permission === 'true'){
+       fetch('http://localhost:2022/softmagic/foldernames', {method:'GET', cache: 'no-cache'})
+     .then((response) => response.json())
+     .then((folderNames) => setFolderNames(folderNames));
+    }
+}
 
 const changeHandler = (event) => {
 
@@ -121,7 +136,7 @@ function UploadAbleFileInfo(props){
 
 async function sendFiles(fileList){
 
-    await fetch('http://192.168.1.69:2022/softmagic/upload',  {
+    await fetch('http://localhost:2022/softmagic/upload',  {
        method: 'POST',
        body: fileList,
        cache: 'no-cache'

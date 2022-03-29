@@ -2,11 +2,16 @@
   box-sizing: border-box;
 }
 
+.layout {
+  padding: 10px;
+}
+
 .App {
   display: flex;
   flex-direction: column;
   gap: 80px;
   align-items: center;
+  margin: 60px;
 }
 
 li {
@@ -49,10 +54,8 @@ li {
 .App-header {
   width: 100%;
   background-color: lightgray;
-  height: 50px;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  height: 80px;
+  font-size: 15px;
   color: white;
 }
 
