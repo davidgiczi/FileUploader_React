@@ -1,5 +1,5 @@
 import './App.css';
-import FileUploadPage from './uploadfile.js'
+import FileUploadPage from './Uploadfile.js'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
@@ -14,7 +14,7 @@ function App() {
 <div className='App'>
 { <BrowserRouter>
 <Routes>
-  <Route path='/softmagic' element={<Layout/>}/>
+  <Route path='/' element={<Layout/>}/>
   <Route path='/softmagic/home' element={<Home/>}/>
   <Route path='/softmagic/contact' element = {<Contact/>}/>
   <Route path='/softmagic/upload' element = {<FileUploadPage/>}/>
