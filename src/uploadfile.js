@@ -98,15 +98,16 @@ sendFiles(formData);
 }
 
 return( <div className="File-list">
+    <div className='Item-field'>
     <p>1) Válasszon céget.</p>
-    <ul><SelectionField  names={clientNames} onChange={chosenClientName}/></ul>
+    <SelectionField  names={clientNames} onChange={chosenClientName}/>
+    </div>
     <p>2) Válasszon mappát.</p>
-    {isFileSelected ? (<div className='File-data'>
-    <ul>  <SelectionField selected={foldername} names={folderNames} onChange={chosenfoldername}/>
+    {isFileSelected ? (<div className='Item-field'>
+    <SelectionField selected={foldername} names={folderNames} onChange={chosenfoldername}/>
     <FileList list={selectedFiles}/>
     <UploadAbleFileInfo files={selectedFiles}/>
-    </ul>       
-        </div>) :
+    </div>) :
         <div>
             <SelectionField selected={foldername} names={folderNames} onChange={chosenfoldername}/>
             <InfoText info={infoText} color='black'/>
@@ -168,7 +169,7 @@ async function sendFiles(fileList){
    
    .then((response) => response.text())
    .then((text) => {alert(text);})
-   .catch((error) => {alert(error);})
+   .catch((error) => {alert("Fájlok küldése sikertelen.");})
    window.location.reload();
 }
 
