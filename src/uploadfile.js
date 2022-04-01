@@ -2,13 +2,15 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 const MAX_SIZE = 5 * 1024 * 1024;
 let foldername = "-";
+let clientName = "-"
 
 function FileUploadPage(){
 const[selectedFiles, setSelectedFiles] = useState([]);
 const[isFileSelected, setIsFileSelected] = useState(false);
 const[disabled, setDisabled] = useState(true);
-const[infoText, setInfoText] = useState("Válasszon dokumentumokat a küldéshez.");
+const[infoText, setInfoText] = useState("3) Válasszon dokumentumokat a küldéshez.");
 const[folderNames, setFolderNames] = useState([]);
+const[clientNames, setClientNames] = useState([]);
 
 useEffect(() => {
 
@@ -20,16 +22,25 @@ useEffect(() => {
    fetch('http://localhost:2022/softmagic/getPermission', {method:'POST', cache: 'no-cache', body: formData})
      .then((response) => response.text())
      .then((permission) => isValid(permission));
-
+    }
+    else{
+        window.location.href= window.origin;
+        return;
     }
   }, []);
 
   const isValid = (permission) => {
-    permission === 'true' ? alert("Használat engedélyezve.") : alert("Helytelen jelszó!");  
     if(permission === 'true'){
-       fetch('http://localhost:2022/softmagic/foldernames', {method:'GET', cache: 'no-cache'})
+      fetch('http://localhost:2022/softmagic/foldernames', {method:'GET', cache: 'no-cache'})
      .then((response) => response.json())
      .then((folderNames) => setFolderNames(folderNames));
+     fetch('http://localhost:2022/softmagic/clients', {method:'GET', cache: 'no-cache'})
+     .then((response) => response.json())
+     .then((clientNames) => setClientNames(clientNames));
+    }
+    else{
+        alert("Helytelen jelszó!");
+        window.location.reload();
     }
 }
 
@@ -43,22 +54,32 @@ const changeHandler = (event) => {
     else {
         setDisabled(true); 
         setSelectedFiles([]);
-        setInfoText("Válasszon a dokumentumokat a küldéshez.");
+        setInfoText("3) Válasszon a dokumentumokat a küldéshez.");
         window.location.reload();
         return;
         }
 
-     if(foldername === "-") {
-        alert("A fájlok küldése előtt válasszon mappanevet.")
+     if(foldername === "-" || clientName === "-") { 
+        alert("A fájlok küldése előtt válasszon cég-, és mappanevet.")
            }
     else {
         setDisabled(false);
         }
 }
 
+const chosenClientName = (event) => {
+    clientName = event.target.value;
+    if(foldername !== "-" && clientName !== "-" && isFileSelected){
+        setDisabled(false);
+        }
+        else {
+        setDisabled(true);
+        }
+}
+
 const chosenfoldername = (event) => {
        foldername = event.target.value;
-    if(foldername !== "-" && isFileSelected){
+    if(foldername !== "-" && clientName !== "-" && isFileSelected){
     setDisabled(false);
     }
     else {
@@ -72,11 +93,14 @@ for (const key of Object.keys(selectedFiles)) {
     formData.append('file', selectedFiles[key])
 }
 formData.append('foldername', foldername);
+formData.append('clientname', clientName);
 sendFiles(formData);
 }
 
 return( <div className="File-list">
-    <p>Válasszon mappát.</p>
+    <p>1) Válasszon céget.</p>
+    <ul><SelectionField  names={clientNames} onChange={chosenClientName}/></ul>
+    <p>2) Válasszon mappát.</p>
     {isFileSelected ? (<div className='File-data'>
     <ul>  <SelectionField selected={foldername} names={folderNames} onChange={chosenfoldername}/>
     <FileList list={selectedFiles}/>
