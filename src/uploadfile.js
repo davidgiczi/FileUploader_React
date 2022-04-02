@@ -60,7 +60,7 @@ const changeHandler = (event) => {
         }
 
      if(foldername === "-" || clientName === "-") { 
-        alert("A fájlok küldése előtt válasszon cég-, és mappanevet.")
+        alert("A fájlok küldése előtt cég-, és mappanév választása szükséges.")
            }
     else {
         setDisabled(false);
